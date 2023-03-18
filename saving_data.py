@@ -22,20 +22,23 @@ def save_data(ms, Ns, runs, model, r = 0, multi = False):
         Ns = [Ns]
     for m in ms:
         print ('m = %.i' %m)
+        if r == 'cl':
+            r1 = m/3
+        else: 
+            r1 = r
         for N in Ns:
             print ('N = %.i' %N)
             try:
-                degrees_m_N = np.load(f'data/{model}_{m}_{N}.npy')
+                degrees_m_N = np.load(f'data{model}/{model}_{m}_{N}_{r1}.npy')
                 degrees_m_N = degrees_m_N.tolist()
             except:
                 degrees_m_N = []
             for run in range(runs):
                 print (run)
-                network = mod.BA_model_opt(m, model = model, r = r, multi = multi)
+                network = mod.BA_model_opt(m, model = model, r = r1, multi = multi)
                 network.add_nodes(N)
                 degrees_m_N.append(network.degrees())
-            np.save(f'data/{model}_{m}_{N}.npy',degrees_m_N)
+            np.save(f'data{model}/{model}_{m}_{N}_{r1}.npy',degrees_m_N)
             
-save_data(128,1000000, 100, 'PA')
-save_data(256,[100, 1000, 10000, 100000, 1000000], 100, 'PA')
+save_data([3, 6, 9, 12, 15], [100, 1000, 10000], 100, 'EV', r = 'cl')
                 
